@@ -26,4 +26,6 @@ aplanar [] = []
 aplanar (x:xs) = x ++ aplanar xs
 
 pertenece :: Eq a => a -> [a] -> Bool
-pertenece 
+pertenece x [] = False
+pertenece x (y:ys) = (x == y) || pertenece x ys
+
