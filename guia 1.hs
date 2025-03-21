@@ -105,10 +105,18 @@ data Entrenador = E String Pokemon Pokemon
 
 
 superaA :: Pokemon -> Pokemon -> Bool
-superaA Agua Fuego = True
-superaA Fuego Planta = True
-superaA Planta Agua = True
-superaA _ _ = False
+superaA p1 p2 = tipoSuperaA (tipo p1) (tipo p2)
+
+tipoSuperaA :: TipoDePokemon -> TipoDePokemon -> Bool
+tipoSuperaA Agua Fuego = True
+tipoSuperaA Fuego Planta = True
+tipoSuperaA Planta Agua = True
+tipoSuperaA _ _ = False
+
+
+tipo :: Pokemon -> TipoDePokemon
+tipo (Pk t _) = t
+
 
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
 cantidadDePokemonDe t e = es1SiSino0 ( esDeTipo t (pokemon1 e)) + es1SiSino0 (esDeTipo t (pokemon2 e))
