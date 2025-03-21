@@ -11,6 +11,7 @@ maxDelPar :: (Int,Int) -> Int
 maxDelPar (n,m) = if n>m then n else m
 
 data Dir = Norte | Sur | Este | Oeste
+    deriving Show
 
 opuesto :: Dir -> Dir
 opuesto Norte = Sur
