@@ -169,3 +169,4 @@ sinElPrimero (x:xs) = xs
 
 splitHead :: [a] -> (a, [a])
 splitHead (x:xs) = (elPrimero (x:xs), sinElPrimero (x:xs))
+
