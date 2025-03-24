@@ -70,8 +70,5 @@ maxDelPar :: (Int, Int) -> Int
 maxDelPar (n, m) = if n > m then n else m
 
 
-elMinimo :: Ord a => [a] -> a
-elMinimo []  = 0
-elMinimo (x:xs) = 
 
 
