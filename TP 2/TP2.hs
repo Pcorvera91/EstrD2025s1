@@ -1,3 +1,4 @@
+
 sumatoria :: [Int] -> Int
 sumatoria [] = 0
 sumatoria (x : xs) = x + sumatoria xs
@@ -70,5 +71,32 @@ maxDelPar :: (Int, Int) -> Int
 maxDelPar (n, m) = if n > m then n else m
 
 
+elMinimo :: Ord a => [a] -> a
+-- Precondición: la lista no está vacía
+elMinimo [] = error "La lista está vacía, no se puede hallar el mínimo"
+elMinimo (x:xs) = menor x (elMinimo xs)
 
+menor :: Ord a => a -> a -> a
+menor x y = if x < y then x else y
 
+factorial :: Int -> Int
+factorial 0 = 1
+factorial n = n * factorial (n-1)
+
+cuentaRegresiva :: Int -> [Int]
+cuentaRegresiva 0 = []
+cuentaRegresiva n = n : cuentaRegresiva (n-1)
+
+repetir :: Int -> a -> [a]
+repetir 0 x = []
+repetir n x = x : repetir (n-1) x
+
+losPrimeros :: Int -> [a] -> [a]
+losPrimeros 0 _ = []
+losPrimeros _ [] = []
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
+
+sinLosPrimeros :: Int -> [a] -> [a]
+sinLosPrimeros 0 _ = xs
+sinLosPrimeros _ [] = []
+sinLosPrimeros n (x:xs) = 
