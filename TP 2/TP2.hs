@@ -165,10 +165,19 @@ esDeTipo Fuego (Pk Fuego _) = True
 esDeTipo Planta (Pk Planta _) = True
 esDeTipo _ _ = False
 
+cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = st t (pokemones e1) (pokemones e2)
+
+
 
 esMaestroPokemon :: Entrenador -> Bool
 esMaestroPokemon e = hayPokemonsDeDiferenteTipo (pokemosDe e)
 
 hayPokemonsDeDiferenteTipo :: [Pokemons] -> Bool
 hayPokemonsDeDiferenteTipo pkms = hayAlMenosUnoDe_En_ Agua pkms && 
-                                  hayAlMenosUnoDe_En_ Fuego pkms
+                                  hayAlMenosUnoDe_En_ Fuego pkms &&
+                                  hayAlMenosUnoDe_En_ Planta pkms
+
+hayAlMenosUnoDe_En_ :: TipoDePokemon -> [Pokemons] -> Bool
+hayAlMenosUnoDe_En_ t [] = False
+hayAlMenosUnoDe_En_ t (pkm:pkms) = esDeTipo t pkm || hayAlMenosUnoDe_En_ t pkms
