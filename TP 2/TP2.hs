@@ -143,15 +143,32 @@ cantPokemon :: Entrenador -> Int
 cantPokemon e = longitud (pokemonsDe e)
 
 ponkemonsDe :: Entrenador -> [Pokemon]
-pokemonsDe (ConsEntrenador _ pkms) = pkms
+pokemonsDe (ConsEntrenador n pkms) = pkms n
 
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
 cantPokemonDe t e = cantPokemon (entrenadorConPokemonsDeTipo e t)
 
 entrenadorConPokemonsDeTipo :: Entrenador -> TipoDePokemon -> Entrenador
-entrenadorConPokemonsDeTipo e t = ConsEntrenador n (pokemonsDeTipo e t)
+entrenadorConPokemonsDeTipo e t = ConsEntrenador (nombreEntrenador e) (pokemonsDeTipo (pokemonsDe e) t)
 
-pokemonsDeTipo :: Entrenador -> TipoDePokemon -> [Pokemons]
-pokemonsDeTipo
+nombreEntrenador :: Entrenador -> String
+nombreEntrenador (ConsEntrenador n pkms) = n
+
+pokemonsDeTipo :: [Pokemon] -> TipoDePokemon -> [Pokemons]
+pokemonsDeTipo (pkm:pkms) t = if (esDeTipo t pkm)
+                              then pkm : pokemonsDeTipo pkms t
+                              else pokemonsDeTipo pkms t
+
+esDeTipo :: TipoDePokemon -> Pokemon -> Bool
+esDeTipo Agua (Pk Agua _) = True
+esDeTipo Fuego (Pk Fuego _) = True
+esDeTipo Planta (Pk Planta _) = True
+esDeTipo _ _ = False
 
 
+esMaestroPokemon :: Entrenador -> Bool
+esMaestroPokemon e = hayPokemonsDeDiferenteTipo (pokemosDe e)
+
+hayPokemonsDeDiferenteTipo :: [Pokemons] -> Bool
+hayPokemonsDeDiferenteTipo pkms = hayAlMenosUnoDe_En_ Agua pkms && 
+                                  hayAlMenosUnoDe_En_ Fuego pkms
