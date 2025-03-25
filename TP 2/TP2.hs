@@ -97,6 +97,17 @@ losPrimeros _ [] = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
 
 sinLosPrimeros :: Int -> [a] -> [a]
-sinLosPrimeros 0 _ = xs
 sinLosPrimeros _ [] = []
-sinLosPrimeros n (x:xs) = 
+sinLosPrimeros n (x:xs) = if n<=0
+                          then x : sinLosPrimeros (n-1) xs
+                          else sinLosPrimeros (n-1) xs
+
+
+data Persona = P String Int String
+  deriving (Show)
+
+-- mayoresA :: Int -> [Persona] -> [Persona]
+-- mayoresA n 
+
+edad :: Persona -> Int
+edad (P n e d) = e
