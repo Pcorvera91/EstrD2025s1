@@ -165,3 +165,8 @@ sinElPrimero (x : xs) = xs
 
 splitHead :: [a] -> (a, [a])
 splitHead (x : xs) = (elPrimero (x : xs), sinElPrimero (x : xs))
+
+-- maxDelPar (divisionYResto (sumar (sucesor 8) 1) (sucesor 0))
+-- maxDelPar (divisionYResto (sumar (sucesor 4) (sucesor 4)) (sucesor 0))
+-- maxDelPar (divisionYResto (sumar (sucesor (sucesor 3)) (sucesor (sucesor 3))) (sucesor 0))
+-- maxDelPar (divisionYResto (sumar (sucesor 2) (sumar 3 4)) (sucesor 0))

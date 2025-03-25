@@ -106,8 +106,52 @@ sinLosPrimeros n (x:xs) = if n<=0
 data Persona = P String Int String
   deriving (Show)
 
--- mayoresA :: Int -> [Persona] -> [Persona]
--- mayoresA n 
+mayoresA :: Int -> [Persona] -> [Persona]
+mayoresA n [] = []
+mayoresA n (p:ps) = if edad p > n
+                    then p : mayoresA n ps
+                    else mayoresA n ps
 
 edad :: Persona -> Int
 edad (P n e d) = e
+
+promedioEdad :: [Persona] -> Int
+--Precond: La lista al menos posee una persona
+promedioEdad ps = promedio (edades ps)
+
+edades :: [Persona] -> [Int]
+edades [] = []
+edades (p:ps) = edad p : edades ps
+
+promedio :: [ Int ] -> Int
+-- PRECOND: la lista no es vacía
+promedio ns = div (sumatoria ns) (longitud ns)
+
+elMasViejo :: [Persona] -> Persona
+--PRECOND: La lista al menos tiene una persona
+elMasViejo [] = error "Tiene que haber al menos una persona"
+elMasViejo (p:ps) = laQueEsMayor p (elMasViejo ps)
+
+laQueEsMayor :: Persona -> Persona -> Persona
+laQueEsMayor p1 p2 = if edad p1 > edad p2 then p1 else p2
+
+data TipoDePokemon = Agua | Fuego | Planta
+data Pokemon = ConsPokemon TipoDePokemon Int
+data Entrenador = ConsEntrenador String [Pokemon]
+
+cantPokemon :: Entrenador -> Int
+cantPokemon e = longitud (pokemonsDe e)
+
+ponkemonsDe :: Entrenador -> [Pokemon]
+pokemonsDe (ConsEntrenador _ pkms) = pkms
+
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+cantPokemonDe t e = cantPokemon (entrenadorConPokemonsDeTipo e t)
+
+entrenadorConPokemonsDeTipo :: Entrenador -> TipoDePokemon -> Entrenador
+entrenadorConPokemonsDeTipo e t = ConsEntrenador n (pokemonsDeTipo e t)
+
+pokemonsDeTipo :: Entrenador -> TipoDePokemon -> [Pokemons]
+pokemonsDeTipo
+
+
