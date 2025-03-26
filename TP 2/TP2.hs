@@ -142,7 +142,7 @@ data Entrenador = ConsEntrenador String [Pokemon]
 cantPokemon :: Entrenador -> Int
 cantPokemon e = longitud (pokemonsDe e)
 
-ponkemonsDe :: Entrenador -> [Pokemon]
+pokemonsDe :: Entrenador -> [Pokemon]
 pokemonsDe (ConsEntrenador n pkms) = pkms 
 
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
@@ -154,30 +154,51 @@ entrenadorConPokemonsDeTipo e t = ConsEntrenador (nombreEntrenador e) (pokemonsD
 nombreEntrenador :: Entrenador -> String
 nombreEntrenador (ConsEntrenador n pkms) = n
 
-pokemonsDeTipo :: [Pokemon] -> TipoDePokemon -> [Pokemons]
+pokemonsDeTipo :: [Pokemon] -> TipoDePokemon -> [Pokemon]
 pokemonsDeTipo (pkm:pkms) t = if (esDeTipo t pkm)
                               then pkm : pokemonsDeTipo pkms t
                               else pokemonsDeTipo pkms t
 
 esDeTipo :: TipoDePokemon -> Pokemon -> Bool
-esDeTipo Agua (Pk Agua _) = True
-esDeTipo Fuego (Pk Fuego _) = True
-esDeTipo Planta (Pk Planta _) = True
+esDeTipo Agua (ConsPokemon Agua _) = True
+esDeTipo Fuego (ConsPokemon Fuego _) = True
+esDeTipo Planta (ConsPokemon Planta _) = True
 esDeTipo _ _ = False
 
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
-cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = st t (pokemones e1) (pokemones e2)
+-- cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = st t (pokemones e1) (pokemones e2)
+cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cuantosPokemonsDeTipoLeGananATodosA t (pokemonsDe e1) (pokemonsDe e2)
 
+cuantosPokemonsDeTipoLeGananATodosA :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
+cuantosPokemonsDeTipoLeGananATodosA _ [] _ = 0
+cuantosPokemonsDeTipoLeGananATodosA _ _ [] = 0
+cuantosPokemonsDeTipoLeGananATodosA t (pk1:pk1s) pk2s = es1SiSino0 (leGanaATodos pk1 pk2s ) + cuantosPokemonsDeTipoLeGananATodosA t pk1s pk2s
+
+leGanaATodos :: Pokemon -> [Pokemon] -> Bool
+leGanaATodos _ [] = False
+leGanaATodos pk (pkm:pkms) = superaA pk pkm && leGanaATodos pk pkms 
+
+superaA :: Pokemon -> Pokemon -> Bool
+superaA p1 p2 = tipoSuperaA (tipo p1) (tipo p2)
+
+tipoSuperaA :: TipoDePokemon -> TipoDePokemon -> Bool
+tipoSuperaA Agua Fuego = True
+tipoSuperaA Fuego Planta = True
+tipoSuperaA Planta Agua = True
+tipoSuperaA _ _ = False
+
+tipo :: Pokemon -> TipoDePokemon
+tipo (ConsPokemon t _) = t
 
 
 esMaestroPokemon :: Entrenador -> Bool
-esMaestroPokemon e = hayPokemonsDeDiferenteTipo (pokemosDe e)
+esMaestroPokemon e = hayPokemonsDeDiferenteTipo (pokemonsDe e)
 
-hayPokemonsDeDiferenteTipo :: [Pokemons] -> Bool
+hayPokemonsDeDiferenteTipo :: [Pokemon] -> Bool
 hayPokemonsDeDiferenteTipo pkms = hayAlMenosUnoDe_En_ Agua pkms && 
                                   hayAlMenosUnoDe_En_ Fuego pkms &&
                                   hayAlMenosUnoDe_En_ Planta pkms
 
-hayAlMenosUnoDe_En_ :: TipoDePokemon -> [Pokemons] -> Bool
+hayAlMenosUnoDe_En_ :: TipoDePokemon -> [Pokemon] -> Bool
 hayAlMenosUnoDe_En_ t [] = False
 hayAlMenosUnoDe_En_ t (pkm:pkms) = esDeTipo t pkm || hayAlMenosUnoDe_En_ t pkms
