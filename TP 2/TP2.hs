@@ -143,7 +143,7 @@ cantPokemon :: Entrenador -> Int
 cantPokemon e = longitud (pokemonsDe e)
 
 ponkemonsDe :: Entrenador -> [Pokemon]
-pokemonsDe (ConsEntrenador n pkms) = pkms n
+pokemonsDe (ConsEntrenador n pkms) = pkms 
 
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
 cantPokemonDe t e = cantPokemon (entrenadorConPokemonsDeTipo e t)
