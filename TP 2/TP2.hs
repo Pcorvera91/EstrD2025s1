@@ -155,6 +155,7 @@ nombreEntrenador :: Entrenador -> String
 nombreEntrenador (ConsEntrenador n pkms) = n
 
 pokemonsDeTipo :: [Pokemon] -> TipoDePokemon -> [Pokemon]
+pokemonsDeTipo [] _ = []
 pokemonsDeTipo (pkm:pkms) t = if (esDeTipo t pkm)
                               then pkm : pokemonsDeTipo pkms t
                               else pokemonsDeTipo pkms t
@@ -167,15 +168,15 @@ esDeTipo _ _ = False
 
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
 -- cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = st t (pokemones e1) (pokemones e2)
-cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cuantosPokemonsDeTipoLeGananATodosA t (pokemonsDe e1) (pokemonsDe e2)
+cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cuantosPokemonsLeGananATodosA (pokemonsDeTipo  (pokemons e1) t) (pokemonsDe e2)
 
-cuantosPokemonsDeTipoLeGananATodosA :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
-cuantosPokemonsDeTipoLeGananATodosA _ [] _ = 0
-cuantosPokemonsDeTipoLeGananATodosA _ _ [] = 0
-cuantosPokemonsDeTipoLeGananATodosA t (pk1:pk1s) pk2s = es1SiSino0 (leGanaATodos pk1 pk2s ) + cuantosPokemonsDeTipoLeGananATodosA t pk1s pk2s
+cuantosPokemonsLeGananATodosA :: [Pokemon] -> [Pokemon] -> Int
+cuantosPokemonsLeGananATodosA [] _ = 0
+cuantosPokemonsLeGananATodosA pk1s [] = longitud pk1s
+cuantosPokemonsLeGananATodosA t (pk1:pk1s) pk2s = es1SiSino0 (leGanaATodos pk1 pk2s ) + cuantosPokemonsDeTipoLeGananATodosA t pk1s pk2s
 
 leGanaATodos :: Pokemon -> [Pokemon] -> Bool
-leGanaATodos _ [] = False
+leGanaATodos _ [] = True
 leGanaATodos pk (pkm:pkms) = superaA pk pkm && leGanaATodos pk pkms 
 
 superaA :: Pokemon -> Pokemon -> Bool
@@ -202,3 +203,11 @@ hayPokemonsDeDiferenteTipo pkms = hayAlMenosUnoDe_En_ Agua pkms &&
 hayAlMenosUnoDe_En_ :: TipoDePokemon -> [Pokemon] -> Bool
 hayAlMenosUnoDe_En_ t [] = False
 hayAlMenosUnoDe_En_ t (pkm:pkms) = esDeTipo t pkm || hayAlMenosUnoDe_En_ t pkms
+
+
+data Seniority = Junior | SemiSenior | Senior
+data Proyecto = ConsProyecto String
+data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
+data Empresa = ConsEmpresa [Rol]
+
+
