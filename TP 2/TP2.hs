@@ -222,13 +222,14 @@ proyectosDeDiferentesRoles (r:rs) = f ...proyecto r ... proyectosDeDiferentesRol
 
 
 agregarProyectoSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
+agregarproyectoSiNoEsta p [] = 
+agregarProyectoSiNoEsta p (pr:prs) = if (nombre p == nombre pr)
+                                     then agregarProyectoSiNoEsta prs
+                                     else 
 
-agregarProyectoSiNoEsta p (pr)
 
-
-estaElProyecto :: Proyecto -> [Proyecto] -> Bool
-estaElProyecto p [] = False
-estaElProyecto p (pr:prs) = nombre p == nombre pr || estaElProyecto p prs
+nombre :: Proyecto -> String
+nombre (ConsProyecto n) = n
 
 proyecto :: Rol -> Proyecto
 proyecto (Developer _ p) = p
