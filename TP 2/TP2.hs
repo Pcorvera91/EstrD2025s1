@@ -210,4 +210,35 @@ data Proyecto = ConsProyecto String
 data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
 data Empresa = ConsEmpresa [Rol]
 
+proyectos :: Empresa -> [Proyecto]
+proyectos e = sinProyectosRepetidos (proyectosDeLaEmpresa e)
+
+proyectosDeLaEmpresa :: Empresa -> [Proyecto]
+proyectosDeLaEmpresa (ConsEmpresa rs) = proyectosDeDiferentesRoles rs
+
+proyectosDeDiferentesRoles :: [Rol] -> [Proyecto]
+proyectosDeDiferentesRoles [] = []
+proyectosDeDiferentesRoles (r:rs) = f ...proyecto r ... proyectosDeDiferentesRoles rs
+
+
+agregarProyectoSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
+
+agregarProyectoSiNoEsta p (pr)
+
+
+estaElProyecto :: Proyecto -> [Proyecto] -> Bool
+estaElProyecto p [] = False
+estaElProyecto p (pr:prs) = nombre p == nombre pr || estaElProyecto p prs
+
+proyecto :: Rol -> Proyecto
+proyecto (Developer _ p) = p
+proyecto (Management _ p) = p
+
+
+losDevSenior :: Empresa -> [Proyecto] -> Int
+
+
+
+
+
 
