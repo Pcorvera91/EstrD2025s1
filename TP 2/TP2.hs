@@ -1,6 +1,4 @@
-import Distribution.Backpack.PreModuleShape (PreModuleShape(preModShapeProvides))
-import Graphics.Win32 (pS_ALTERNATE)
-import System.Win32.DebugApi (rsi)
+
 
 sumatoria :: [Int] -> Int
 sumatoria [] = 0
