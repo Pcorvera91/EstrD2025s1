@@ -1,3 +1,6 @@
+import Distribution.Backpack.PreModuleShape (PreModuleShape(preModShapeProvides))
+import Graphics.Win32 (pS_ALTERNATE)
+import System.Win32.DebugApi (rsi)
 
 sumatoria :: [Int] -> Int
 sumatoria [] = 0
@@ -168,12 +171,13 @@ esDeTipo _ _ = False
 
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
 -- cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = st t (pokemones e1) (pokemones e2)
-cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cuantosPokemonsLeGananATodosA (pokemonsDeTipo  (pokemons e1) t) (pokemonsDe e2)
+cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cuantosPokemonsLeGananATodosA (pokemonsDeTipo  (pokemonsDe e1) t) (pokemonsDe e2)
 
 cuantosPokemonsLeGananATodosA :: [Pokemon] -> [Pokemon] -> Int
-cuantosPokemonsLeGananATodosA [] _ = 0
+cuantosPokemonsLeGananATodosA [] pk2s = 0
 cuantosPokemonsLeGananATodosA pk1s [] = longitud pk1s
-cuantosPokemonsLeGananATodosA t (pk1:pk1s) pk2s = es1SiSino0 (leGanaATodos pk1 pk2s ) + cuantosPokemonsDeTipoLeGananATodosA t pk1s pk2s
+cuantosPokemonsLeGananATodosA  (pk1:pk1s) pk2s = es1SiSino0 (leGanaATodos pk1 pk2s ) + cuantosPokemonsLeGananATodosA  pk1s pk2s
+
 
 leGanaATodos :: Pokemon -> [Pokemon] -> Bool
 leGanaATodos _ [] = True
@@ -211,22 +215,24 @@ data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
 data Empresa = ConsEmpresa [Rol]
 
 proyectos :: Empresa -> [Proyecto]
-proyectos e = sinProyectosRepetidos (proyectosDeLaEmpresa e)
+proyectos e = proyectosDeLaEmpresa e
 
 proyectosDeLaEmpresa :: Empresa -> [Proyecto]
 proyectosDeLaEmpresa (ConsEmpresa rs) = proyectosDeDiferentesRoles rs
 
 proyectosDeDiferentesRoles :: [Rol] -> [Proyecto]
 proyectosDeDiferentesRoles [] = []
-proyectosDeDiferentesRoles (r:rs) = f ...proyecto r ... proyectosDeDiferentesRoles rs
+proyectosDeDiferentesRoles (r:rs) = agregarProyectoSiNoEsta (proyecto r)  (proyectosDeDiferentesRoles rs)
 
 
 agregarProyectoSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
-agregarproyectoSiNoEsta p [] = 
-agregarProyectoSiNoEsta p (pr:prs) = if (nombre p == nombre pr)
-                                     then agregarProyectoSiNoEsta prs
-                                     else 
-
+agregarProyectoSiNoEsta p [] = []
+agregarProyectoSiNoEsta p (pr:prs) = if not ( sonElMismoProyecto p pr)
+                                     then pr : agregarProyectoSiNoEsta p prs
+                                     else agregarProyectoSiNoEsta p prs
+ 
+sonElMismoProyecto :: Proyecto -> Proyecto -> Bool
+sonElMismoProyecto p1 p2 = nombre p1 == nombre p2
 
 nombre :: Proyecto -> String
 nombre (ConsProyecto n) = n
@@ -236,9 +242,49 @@ proyecto (Developer _ p) = p
 proyecto (Management _ p) = p
 
 
+
+
+
 losDevSenior :: Empresa -> [Proyecto] -> Int
+losDevSenior (ConsEmpresa rs) prs = rolesQueEstanEnAlgunProyecto (rolesQueSonDevSenior rs)  prs 
+
+rolesQueEstanEnAlgunProyecto :: [Rol] -> [Proyecto] -> Int
+rolesQueEstanEnAlgunProyecto [] ps = 0
+rolesQueEstanEnAlgunProyecto (r:rs) [] = 0
+rolesQueEstanEnAlgunProyecto (r:rs) ps = es1SiSino0 (elRolEstaEnAlgunProyecto r ps ) + rolesQueEstanEnAlgunProyecto rs ps
+
+elRolEstaEnAlgunProyecto :: Rol -> [Proyecto] -> Bool
+elRolEstaEnAlgunProyecto r [] = False
+elRolEstaEnAlgunProyecto r (p:ps) = sonElMismoProyecto (proyecto r) p || elRolEstaEnAlgunProyecto r ps 
+
+rolesQueSonDevSenior :: [Rol] -> [Rol]
+rolesQueSonDevSenior [] = []
+rolesQueSonDevSenior (r:rs) = if (esDevSenior r)
+                              then r : rolesQueSonDevSenior rs
+                              else rolesQueSonDevSenior rs
+
+esDevSenior :: Rol -> Bool
+esDevSenior (Developer Senior p) = True
+esDevSenior _ = False
+
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+cantQueTrabajanEn ps (ConsEmpresa rs) = rolesQueEstanEnAlgunProyecto rs ps 
+
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+asignadosPorProyecto e = proyectosConSuCantidadDeTrabajadores (proyectos e) (roles e)
+
+proyectosConSuCantidadDeTrabajadores :: [Proyecto] -> [Rol] -> [(Proyecto,Int)]
+proyectosConSuCantidadDeTrabajadores []  rs = []
+proyectosConSuCantidadDeTrabajadores ps  [] = []
+proyectosConSuCantidadDeTrabajadores (p:ps) rs = (p,cantDeTrabajadoresQueTrabajanEn rs p) : proyectosConSuCantidadDeTrabajadores ps rs
 
 
+cantDeTrabajadoresQueTrabajanEn :: [Rol] -> Proyecto -> Int
+cantDeTrabajadoresQueTrabajanEn [] p = 0
+cantDeTrabajadoresQueTrabajanEn (r:rs) p = es1SiSino0 (sonElMismoProyecto (proyecto r) p ) + cantDeTrabajadoresQueTrabajanEn rs p 
+
+roles :: Empresa -> [Rol]
+roles (ConsEmpresa rs) = rs
 
 
 
