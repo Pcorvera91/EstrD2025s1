@@ -155,7 +155,8 @@ swap (x, y) = (y, x)
 
 estaVacia :: [a] -> Bool
 estaVacia [] = True
-estaVacia [_] = False
+estaVacia _  = False
+
 
 elPrimero :: [a] -> a
 elPrimero (x : xs) = x
