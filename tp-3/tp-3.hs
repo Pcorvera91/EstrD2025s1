@@ -58,6 +58,19 @@ hayTesoroEn n Fin = False
 hayTesoroEn n (Cofre obs c) = hayTesoroEn (n-1) c
 hayTesoroEn n (Nada c)= hayTesoroEn (n-1) c
 
+alMenosNTesoros :: Int -> Camino -> Bool
+alMenosNTesoros n c = cantidadDeTesoros c >= n
 
+cantidadDeTesoros :: Camino -> Int
+cantidadDeTesoros Fin = 0
+cantidadDeTesoros (Cofre obs c) = totalDeTesoros obs + cantidadDeTesoros c
+cantidadDeTesoros (Nada c) = cantidadDeTesoros c
+
+totalDeTesoros :: [Objeto] -> Int
+totalDeTesoros [] = 0
+totalDeTesoros (o:os) = es1SiSino0 (esTesoro o) + totalDeTesoros os
+
+
+cantTesorosEntre :: Int -> Int -> Camino -> Int
 
 
