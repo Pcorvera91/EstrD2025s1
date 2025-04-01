@@ -70,14 +70,14 @@ totalDeTesoros (o:os) = es1SiSino0 (esTesoro o) + totalDeTesoros os
 
 
 cantTesorosEntre :: Int -> Int -> Camino -> Int
-cantTesorosEntre desde hasta c = avanzarNYContarTesoros (hasta - desde) c
+cantTesorosEntre desde hasta c = avanzarNYContarTesoros desde (hasta - desde) c
 
 avanzarNYContarTesoros :: Int -> Camino -> Int
 avanzarNYContarTesoros 0 (Cofre obs c) = totalDeTesoros obs
 avanzarNYContarTesoros 0 (Nada c) = 0
 avanzarNYContarTesoros n Fin = 0
 avanzarNYContarTesoros n (Cofre obs c) = totalDeTesoros obs + avanzarNYContarTesoros (n-1)
-avanzarNYContarTesoros n (Nada c) = avanzarNYContarTesoros (n-1)
+avanzarNYContarTesoros n (Nada c) = avanzarNYContarTesoros (n-1) c
 
 
 
