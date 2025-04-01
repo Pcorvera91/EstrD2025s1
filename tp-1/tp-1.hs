@@ -30,7 +30,7 @@ siguiente :: Dir -> Dir
 siguiente Norte = Este
 siguiente Este = Sur
 siguiente Sur = Oeste
-siguiente Oeste = Norte
+siguiente Oeste = error "No existe siguiente de oeste"
 
 data DiaDeSemana = Lunes | Martes | Miercoles | Jueves | Viernes | Sabado | Domingo
 
@@ -43,13 +43,13 @@ empiezaConM Miercoles = True
 empiezaConM _ = False
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
-vieneDespues Martes Lunes = True
-vieneDespues Miercoles Martes = True
-vieneDespues Jueves Miercoles = True
-vieneDespues Viernes Jueves = True
-vieneDespues Sabado Viernes = True
-vieneDespues Domingo Sabado = True
-vieneDespues Lunes Domingo = True
+vieneDespues Lunes Martes = True
+vieneDespues Martes  Miercoles = True
+vieneDespues Miercoles Jueves = True
+vieneDespues Jueves Viernes = True
+vieneDespues Viernes Sabado = True
+vieneDespues Sabado Domingo = True
+vieneDespues Domingo Lunes = True
 vieneDespues _ _ = False
 
 estaEnElMedio :: DiaDeSemana -> Bool
