@@ -15,7 +15,6 @@ elColorBuscadoEsIgualAlDeLaCelda Rojo Rojo = True
 elColorBuscadoEsIgualAlDeLaCelda _ _ = False
 
 poner :: Color -> Celda -> Celda
-poner colorAPoner CeldaVacia = Bolita colorAPoner CeldaVacia
 poner colorAPoner c = Bolita colorAPoner c
 
 sacar :: Color -> Celda -> Celda
@@ -51,7 +50,6 @@ pasosHastaTesoro (Cofre obs c) = 0
 pasosHastaTesoro (Nada c) = 1 + pasosHastaTesoro c
 
 hayTesoroEn :: Int -> Camino -> Bool
-hayTesoroEn 0 Fin = False
 hayTesoroEn 0 (Cofre obs c) = hayAlgunTesoroEn obs 
 hayTesoroEn 0 (Nada c) = False
 hayTesoroEn n Fin = False
@@ -72,10 +70,14 @@ totalDeTesoros (o:os) = es1SiSino0 (esTesoro o) + totalDeTesoros os
 
 
 cantTesorosEntre :: Int -> Int -> Camino -> Int
-cantTesorosEntre desde hasta Fin = 
-cantTesorosEntre desde hasta (Cofre obs c) =
-cantTesorosEntre desde hasta (Nada c) =
+cantTesorosEntre desde hasta c = avanzarNYContarTesoros (hasta - desde) c
 
+avanzarNYContarTesoros :: Int -> Camino -> Int
+avanzarNYContarTesoros 0 (Cofre obs c) = totalDeTesoros obs
+avanzarNYContarTesoros 0 (Nada c) = 0
+avanzarNYContarTesoros n Fin = 0
+avanzarNYContarTesoros n (Cofre obs c) = totalDeTesoros obs + avanzarNYContarTesoros (n-1)
+avanzarNYContarTesoros n (Nada c) = avanzarNYContarTesoros (n-1)
 
 
 
