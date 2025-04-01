@@ -72,5 +72,10 @@ totalDeTesoros (o:os) = es1SiSino0 (esTesoro o) + totalDeTesoros os
 
 
 cantTesorosEntre :: Int -> Int -> Camino -> Int
+cantTesorosEntre desde hasta Fin = 
+cantTesorosEntre desde hasta (Cofre obs c) =
+cantTesorosEntre desde hasta (Nada c) =
+
+
 
 
