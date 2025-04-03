@@ -1,3 +1,4 @@
+
 data Color = Azul | Rojo
 data Celda = Bolita Color Celda | CeldaVacia
 
@@ -78,6 +79,62 @@ avanzarNYContarTesoros 0 (Nada c) = 0
 avanzarNYContarTesoros n Fin = 0
 avanzarNYContarTesoros n (Cofre obs c) = totalDeTesoros obs + avanzarNYContarTesoros (n-1)
 avanzarNYContarTesoros n (Nada c) = avanzarNYContarTesoros (n-1) c
+
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+
+
+-- f:: Tree a -> b
+-- f EmptyT = ...
+-- f (NodeT x t1 t2) = ... x ... f t1 ... ft2 ..
+
+sumarT :: Tree Int -> Int
+sumarT EmptyT = 0
+sumarT (NodeT n ti td) = n + sumarT ti + sumarT td
+
+sizeT :: Tree a -> Int
+sizeT EmptyT = 0
+sizeT (NodeT x ti td) = 1 + sizeT ti + sizeT td
+
+mapDobleT :: Tree Int -> Tree Int
+mapDobleT EmptyT = EmptyT
+mapDobleT (NodeT n ti td) = NodeT (elDoble n) (mapDobleT ti) (mapDobleT td)
+
+elDoble :: Int -> Int
+elDoble n = n*2
+
+perteneceT :: Eq a => a -> Tree a -> Bool
+perteneceT x EmptyT = False
+perteneceT x (NodeT y ti td) = x == y || perteneceT x ti || perteneceT x td
+
+aparicionesT :: Eq a => a -> Tree a -> Int
+aparicionesT e EmptyT = 0
+aparicionesT e (NodeT x ti td) = es1SiSino0 (e == x) + aparicionesT e ti + aparicionesT e td
+
+leaves :: Tree a -> [a]
+leaves EmptyT = []
+leaves (NodeT x EmptyT EmptyT) = [x]
+leaves (NodeT x ti td) = leaves ti ++ leaves td 
+
+esHoja :: Tree a -> Bool
+esHoja (NodeT x EmptyT EmptyT) =True
+esHoja _ = False
+
+heightT :: Tree a -> Int
+heightT EmptyT = 0
+heightT (NodeT x EmptyT EmptyT) = 1
+heightT (NodeT x ti td) = 1 + maxDelPar ((heightT ti),(heightT td))
+
+maxDelPar :: (Int, Int) -> Int
+maxDelPar (n, m) = if n > m then n else m
+
+mirrorT :: Tree a -> Tree a
+mirrorT EmptyT = EmptyT
+mirrorT (NodeT x ti td) = NodeT x (mirrorT td) (mirrorT ti)
+
+toList :: Tree a -> [a]
+toList EmptyT = []
+toList (NodeT x ti td) = toList ti ++ [x] ++ toList td
+
 
 
 
