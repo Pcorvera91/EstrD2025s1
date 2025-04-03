@@ -138,3 +138,4 @@ toList (NodeT x ti td) = toList ti ++ [x] ++ toList td
 
 
 
+
