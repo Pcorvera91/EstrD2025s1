@@ -136,6 +136,14 @@ toList EmptyT = []
 toList (NodeT x ti td) = toList ti ++ [x] ++ toList td
 
 
+levelN :: Int -> Tree a -> [a]
+levelN n EmptyT = []
+levelN 0 (NodeT x ti td) = x :    levelN 0 ti ++ levelN 0 td
+levelN n (NodeT x ti td) = levelN (n-1) ti ++ levelN (n-1) td
+
+listPerLevel :: Tree a -> [[a]]
+listPerLevel EmptyT = 
+listPerLevel (NodeT x ti td) = 
 
 
 
