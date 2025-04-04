@@ -73,6 +73,7 @@ maxDelPar (n, m) = if n > m then n else m
 elMinimo :: Ord a => [a] -> a
 -- Precondición: la lista no está vacía
 elMinimo [] = error "La lista está vacía, no se puede hallar el mínimo"
+elMinimo [x] = x
 elMinimo (x:xs) = menor x (elMinimo xs)
 
 menor :: Ord a => a -> a -> a
@@ -83,7 +84,7 @@ factorial 0 = 1
 factorial n = n * factorial (n-1)
 
 cuentaRegresiva :: Int -> [Int]
-cuentaRegresiva 0 = []
+cuentaRegresiva 0 = [0]
 cuentaRegresiva n = n : cuentaRegresiva (n-1)
 
 repetir :: Int -> a -> [a]
