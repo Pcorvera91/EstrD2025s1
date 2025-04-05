@@ -138,12 +138,17 @@ toList (NodeT x ti td) = toList ti ++ [x] ++ toList td
 
 levelN :: Int -> Tree a -> [a]
 levelN n EmptyT = []
-levelN 0 (NodeT x ti td) = x :    levelN 0 ti ++ levelN 0 td
+levelN 0 (NodeT x ti td) = [x]
 levelN n (NodeT x ti td) = levelN (n-1) ti ++ levelN (n-1) td
 
 listPerLevel :: Tree a -> [[a]]
-listPerLevel EmptyT = 
-listPerLevel (NodeT x ti td) = 
+listPerLevel EmptyT = []
+listPerLevel (NodeT x ti td) = [x] ++ agruparElementos (listPerLevel ti) (listPerLevel td)
+
+agruparElementos :: [a] -> [a] -> [a]
+agruparElementos [] _ = 
+agruparElementos _ [] =
+agruparElementos (x:xs) (y:ys) = [x] ++ [y]  ++ agruparElementos xs ys
 
 
 
