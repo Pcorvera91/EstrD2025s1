@@ -223,10 +223,10 @@ proyectosDeDiferentesRoles (r:rs) = agregarProyectoSiNoEsta (proyecto r)  (proye
 
 
 agregarProyectoSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
-agregarProyectoSiNoEsta p [] = [p]
-agregarProyectoSiNoEsta p (pr:prs) = if  sonElMismoProyecto p pr
-                                     then pr : prs
-                                     else pr : agregarProyectoSiNoEsta p prs
+agregarProyectoSiNoEsta p [] = []
+agregarProyectoSiNoEsta p (pr:prs) = if not ( sonElMismoProyecto p pr)
+                                     then pr : agregarProyectoSiNoEsta p prs
+                                     else agregarProyectoSiNoEsta p prs
  
 sonElMismoProyecto :: Proyecto -> Proyecto -> Bool
 sonElMismoProyecto p1 p2 = nombre p1 == nombre p2
@@ -237,6 +237,7 @@ nombre (ConsProyecto n) = n
 proyecto :: Rol -> Proyecto
 proyecto (Developer _ p) = p
 proyecto (Management _ p) = p
+
 
 
 
@@ -268,19 +269,21 @@ cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 cantQueTrabajanEn ps (ConsEmpresa rs) = rolesQueEstanEnAlgunProyecto rs ps 
 
 asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
-asignadosPorProyecto e = contarRoles (roles e)
+asignadosPorProyecto e = proyectosConSuCantidadDeTrabajadores (proyectos e) (roles e)
+
+proyectosConSuCantidadDeTrabajadores :: [Proyecto] -> [Rol] -> [(Proyecto,Int)]
+proyectosConSuCantidadDeTrabajadores []  rs = []
+proyectosConSuCantidadDeTrabajadores ps  [] = []
+proyectosConSuCantidadDeTrabajadores (p:ps) rs = (p,cantDeTrabajadoresQueTrabajanEn rs p) : proyectosConSuCantidadDeTrabajadores ps rs
 
 
-contarRoles :: [Rol] -> [(Proyecto, Int)]
-contarRoles [] = []
-contarRoles (r:rs) = agregarContando (proyecto r) (contarRoles rs)
+cantDeTrabajadoresQueTrabajanEn :: [Rol] -> Proyecto -> Int
+cantDeTrabajadoresQueTrabajanEn [] p = 0
+cantDeTrabajadoresQueTrabajanEn (r:rs) p = es1SiSino0 (sonElMismoProyecto (proyecto r) p ) + cantDeTrabajadoresQueTrabajanEn rs p 
 
-agregarContando :: Proyecto -> [(Proyecto, Int)] -> [(Proyecto, Int)]
-agregarContando p [] = [(p, 1)]
-agregarContando p ((p2, n):ps) =
-  if sonElMismoProyecto p p2
-     then (p2, n + 1) : ps
-     else (p2, n) : agregarContando p ps
+roles :: Empresa -> [Rol]
+roles (ConsEmpresa rs) = rs
+
 
 
 

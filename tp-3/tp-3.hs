@@ -143,12 +143,41 @@ levelN n (NodeT x ti td) = levelN (n-1) ti ++ levelN (n-1) td
 
 listPerLevel :: Tree a -> [[a]]
 listPerLevel EmptyT = []
-listPerLevel (NodeT x ti td) = [x] ++ agruparElementos (listPerLevel ti) (listPerLevel td)
+listPerLevel (NodeT x ti td) = [[x]] ++ agruparElementos (listPerLevel ti) (listPerLevel td)
 
-agruparElementos :: [a] -> [a] -> [a]
-agruparElementos [] _ = 
-agruparElementos _ [] =
-agruparElementos (x:xs) (y:ys) = [x] ++ [y]  ++ agruparElementos xs ys
+agruparElementos :: [[a]] -> [[a]] -> [[a]]
+agruparElementos [] ys = ys
+agruparElementos xs [] = xs
+agruparElementos (x:xs) (y:ys) = (x ++ y) : agruparElementos xs ys
 
+ramaMasLarga :: Tree a -> [a]
+ramaMasLarga EmptyT = []
+ramaMasLarga (NodeT x ti td) = if (heightT ti) > (heightT td)
+                               then x : ramaMasLarga ti
+                               else x : ramaMasLarga td
+
+todosLosCaminos :: Tree a -> [[a]]
+
+data ExpA = Valor Int 
+  | Sum ExpA ExpA
+  | Prod ExpA ExpA
+  | Neg ExpA
+
+eval :: ExpA -> Int
+eval (Valor n) = n
+eval (Sum e1  e2) = e1 + e2
+eval (Prod e1 e2) = e1 * e2
+eval (Neg e) = (-1) * e1
+
+simplificar :: ExpA -> ExpA
+simplificar (Valor n) = Valor n
+simplificar (Sum e1 e2) = Valor simplificar e1 + Valor simplificar e2
+simplificar (Sum (Valor 0) e2) = simplificar e2
+simplificar (Sum e1 (Valor 0)) = simplificar e1
+simplificar (Prod e1 e2) = Valor simplificar e1 * Valor simplificar e2 
+simplificar (Prod (Valor 0) e2) = Valor 0
+simplificar (Prod e1 (Valor 0)) = Valor 0
+simplificar (Neg e) = Neg simplificar e
+simplificar (Neg (Neg e)) = simplificar e
 
 
