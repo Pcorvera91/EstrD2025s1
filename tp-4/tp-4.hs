@@ -74,3 +74,9 @@ esIzq Izq = True
 esIzq Der = False 
 
 hayTesoro :: Mapa -> Bool
+hayTesoro (Fin c) = hayTesoroEnLaListaDeObjetos c
+hayTesoro (Bifurcacion c m1 m2) = hayTesoroEnLaListaDeObjetos c || hayTesoro m1 || hayTesoro m2
+
+caminoAlTesoro :: Mapa -> [Dir]
+caminoAlTesoro (Fin c) =
+caminoAlTesoro (Bifurcacion c m1 m2) = 
