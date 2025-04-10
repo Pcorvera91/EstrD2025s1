@@ -173,19 +173,22 @@ data ExpA = Valor Int
 
 eval :: ExpA -> Int
 eval (Valor n) = n
-eval (Sum e1  e2) = e1 + e2
-eval (Prod e1 e2) = e1 * e2
-eval (Neg e) = (-1) * e1
+eval (Sum e1  e2) = eval e1 + eval e2
+eval (Prod e1 e2) = eval e1 * eval e2
+eval (Neg e) = (-1) * eval e
 
 simplificar :: ExpA -> ExpA
 simplificar (Valor n) = Valor n
-simplificar (Sum e1 e2) = Valor simplificar e1 + Valor simplificar e2
+simplificar (Neg (Neg e)) = simplificar e
+simplificar (Neg e) = Neg (simplificar e)
 simplificar (Sum (Valor 0) e2) = simplificar e2
 simplificar (Sum e1 (Valor 0)) = simplificar e1
-simplificar (Prod e1 e2) = Valor simplificar e1 * Valor simplificar e2 
-simplificar (Prod (Valor 0) e2) = Valor 0
-simplificar (Prod e1 (Valor 0)) = Valor 0
-simplificar (Neg e) = Neg simplificar e
-simplificar (Neg (Neg e)) = simplificar e
+simplificar (Sum e1 e2) = Sum (simplificar e1) (simplificar e2)
+simplificar (Prod (Valor 0) _) = Valor 0
+simplificar (Prod _ (Valor 0)) = Valor 0
+simplificar (Prod (Valor 1) e2) = simplificar e2
+simplificar (Prod e1 (Valor 1)) = simplificar e1
+simplificar (Prod e1 e2) = Prod (simplificar e1) (simplificar e2)
+
 
 

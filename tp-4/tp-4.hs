@@ -57,3 +57,7 @@ hayTesoroEn [] (Fin c) = hayTesoroEnLaListaDeObjetos (objetos c)
 hayTesoroEn (d:ds) (Fin c) = False
 hayTesoroEn [] (Bifurcacion c m1 m2) = hayTesoroEnLaListaDeObjetos (objetos c)
 hayTesoroEn (d:ds) (Bifurcacion c m1 m2) = if esIzq d then hayTesoroEn ds m1 else hayTesoroEn ds m2
+
+hayTesoroEnLaListaDeObjetos :: [Objeto] -> Bool
+hayTesoroEnLaListaDeObjetos [] = False
+hayTesoroEnLaListaDeObjetos (o:os) = esTesoro o || hayTesoroEnLaListaDeObjetos os
