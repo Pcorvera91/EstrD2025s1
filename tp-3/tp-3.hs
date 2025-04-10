@@ -69,16 +69,18 @@ totalDeTesoros :: [Objeto] -> Int
 totalDeTesoros [] = 0
 totalDeTesoros (o:os) = es1SiSino0 (esTesoro o) + totalDeTesoros os
 
-
 cantTesorosEntre :: Int -> Int -> Camino -> Int
-cantTesorosEntre desde hasta c = avanzarNYContarTesoros desde (hasta - desde) c
+cantTesorosEntre desde hasta c = avanzarNYContarTesoros desde (hasta - desde +1) c
 
-avanzarNYContarTesoros :: Int -> Camino -> Int
-avanzarNYContarTesoros 0 (Cofre obs c) = totalDeTesoros obs
-avanzarNYContarTesoros 0 (Nada c) = 0
-avanzarNYContarTesoros n Fin = 0
-avanzarNYContarTesoros n (Cofre obs c) = totalDeTesoros obs + avanzarNYContarTesoros (n-1)
-avanzarNYContarTesoros n (Nada c) = avanzarNYContarTesoros (n-1) c
+avanzarNYContarTesoros :: Int -> Int -> Camino -> Int
+avanzarNYContarTesoros _ _ Fin = 0
+avanzarNYContarTesoros 0 0 (Cofre obs c) = totalDeTesoros obs
+avanzarNYContarTesoros 0 n (Cofre obs c) = totalDeTesoros obs + avanzarNYContarTesoros 0 (n - 1) c
+avanzarNYContarTesoros 0 n (Nada c)      = avanzarNYContarTesoros 0 (n - 1) c
+avanzarNYContarTesoros m n (Cofre _ c)   = avanzarNYContarTesoros (m - 1) n c
+avanzarNYContarTesoros m n (Nada c)      = avanzarNYContarTesoros (m - 1) n c
+
+
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
 
@@ -157,6 +159,12 @@ ramaMasLarga (NodeT x ti td) = if (heightT ti) > (heightT td)
                                else x : ramaMasLarga td
 
 todosLosCaminos :: Tree a -> [[a]]
+todosLosCaminos EmptyT = []
+todosLosCaminos (NodeT x ti td) = [[x]] ++ acumulado x (todosLosCaminos ti) ++ acumulado x (todosLosCaminos td)
+
+acumulado :: a -> [[a]] -> [[a]]
+acumulado _ [] = []
+acumulado x (y:ys) = (x:y) : acumulado x ys
 
 data ExpA = Valor Int 
   | Sum ExpA ExpA
