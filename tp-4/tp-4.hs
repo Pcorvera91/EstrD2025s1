@@ -61,3 +61,16 @@ hayTesoroEn (d:ds) (Bifurcacion c m1 m2) = if esIzq d then hayTesoroEn ds m1 els
 hayTesoroEnLaListaDeObjetos :: [Objeto] -> Bool
 hayTesoroEnLaListaDeObjetos [] = False
 hayTesoroEnLaListaDeObjetos (o:os) = esTesoro o || hayTesoroEnLaListaDeObjetos os
+
+esTesoro :: Objeto -> Bool
+esTesoro Tesoro = True
+esTesoro Chatarra = False
+
+objetos :: Cofre -> [Objeto]
+objetos (Cofre os) = os
+
+esIzq :: Dir -> Bool
+esIzq Izq = True
+esIzq Der = False 
+
+hayTesoro :: Mapa -> Bool
