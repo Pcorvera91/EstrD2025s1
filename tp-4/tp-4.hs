@@ -74,9 +74,18 @@ esIzq Izq = True
 esIzq Der = False 
 
 hayTesoro :: Mapa -> Bool
-hayTesoro (Fin c) = hayTesoroEnLaListaDeObjetos c
-hayTesoro (Bifurcacion c m1 m2) = hayTesoroEnLaListaDeObjetos c || hayTesoro m1 || hayTesoro m2
+hayTesoro (Fin c) = hayTesoroEnLaListaDeObjetos (objetos c)
+hayTesoro (Bifurcacion c m1 m2) = hayTesoroEnLaListaDeObjetos (objetos c) || hayTesoro m1 || hayTesoro m2
+
 
 caminoAlTesoro :: Mapa -> [Dir]
-caminoAlTesoro (Fin c) =
-caminoAlTesoro (Bifurcacion c m1 m2) = 
+caminoAlTesoro (Fin c) = []
+caminoAlTesoro (Bifurcacion c m1 m2) =
+  if perteneceTesoro (objetosDeCofre c)
+    then []
+    else if (hayTesoro m) 
+    then Izq : caminoAlTesoro m1
+    else Der : caminoAlTesoro m2 
+
+
+

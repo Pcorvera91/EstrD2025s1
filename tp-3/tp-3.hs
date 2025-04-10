@@ -178,17 +178,28 @@ eval (Prod e1 e2) = eval e1 * eval e2
 eval (Neg e) = (-1) * eval e
 
 simplificar :: ExpA -> ExpA
-simplificar (Valor n) = Valor n
-simplificar (Neg (Neg e)) = simplificar e
-simplificar (Neg e) = Neg (simplificar e)
-simplificar (Sum (Valor 0) e2) = simplificar e2
-simplificar (Sum e1 (Valor 0)) = simplificar e1
-simplificar (Sum e1 e2) = Sum (simplificar e1) (simplificar e2)
-simplificar (Prod (Valor 0) _) = Valor 0
-simplificar (Prod _ (Valor 0)) = Valor 0
-simplificar (Prod (Valor 1) e2) = simplificar e2
-simplificar (Prod e1 (Valor 1)) = simplificar e1
-simplificar (Prod e1 e2) = Prod (simplificar e1) (simplificar e2)
+simplificar (Valor n)     = Valor n
+simplificar (Neg e)       = simplificarNeg (Neg e)
+simplificar (Sum e1 e2)   = simplificarSuma e1 e2
+simplificar (Prod e1 e2)  = simplificarProd e1 e2
+
+simplificarNeg :: ExpA -> ExpA
+simplificarNeg (Neg (Neg e)) = simplificar e
+simplificarNeg (Neg e)       = Neg (simplificar e)
+simplificarNeg e             = simplificar e
+
+simplificarSuma :: ExpA -> ExpA -> ExpA
+simplificarSuma (Valor 0) e2 = simplificar e2
+simplificarSuma e1 (Valor 0) = simplificar e1
+simplificarSuma e1 e2        = Sum (simplificar e1) (simplificar e2)
+
+simplificarProd :: ExpA -> ExpA -> ExpA
+simplificarProd (Valor 0) _        = Valor 0
+simplificarProd _ (Valor 0)        = Valor 0
+simplificarProd (Valor 1) e2       = simplificar e2
+simplificarProd e1 (Valor 1)       = simplificar e1
+simplificarProd e1 e2              = Prod (simplificar e1) (simplificar e2)
+
 
 
 
