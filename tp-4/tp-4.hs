@@ -81,11 +81,35 @@ hayTesoro (Bifurcacion c m1 m2) = hayTesoroEnLaListaDeObjetos (objetos c) || hay
 caminoAlTesoro :: Mapa -> [Dir]
 caminoAlTesoro (Fin c) = []
 caminoAlTesoro (Bifurcacion c m1 m2) =
-  if perteneceTesoro (objetosDeCofre c)
+  if hayTesoroEnLaListaDeObjetos (objetos c)
     then []
-    else if (hayTesoro m) 
+    else if (hayTesoro m1) 
     then Izq : caminoAlTesoro m1
     else Der : caminoAlTesoro m2 
+
+
+caminoDeLaRamaMasLarga :: Mapa -> [Dir]
+caminoDeLaRamaMasLarga (Fin c) = []
+caminoDeLaRamaMasLarga (Bifurcacion c m1 m2) = if (profundidad m1) > (profundidad m2)
+                                               then Izq : caminoDeLaRamaMasLarga m1
+                                               else Der : caminoDeLaRamaMasLarga m2
+
+profundidad :: Mapa -> Int
+profundidad (Fin c) = 1
+profundidad (Bifurcacion c m1 m2) = 1 + max (profundidad m1) (profundidad m2)
+
+tesorosPorNivel :: Mapa -> [[Objeto]]
+tesorosPorNivel (Fin c) =
+tesorosPorNivel (Bifurcacion c m1 m2) = 
+
+agruparElementos :: [[a]] -> [[a]] -> [[a]]
+agruparElementos [] ys = ys
+agruparElementos xs [] = xs
+agruparElementos (x:xs) (y:ys) = (x ++ y) : agruparElementos xs ys
+
+
+
+
 
 
 

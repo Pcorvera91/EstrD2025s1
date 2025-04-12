@@ -40,11 +40,12 @@ es1SiSino0 condicion =
     else 0
 
 losMenoresA :: Int -> [Int] -> [Int]
-losMenoresA n [] = []
-losMenoresA n (m : ms) = elMenor m n : losMenoresA n ms
+losMenoresA _ [] = []
+losMenoresA n (x:xs) =
+  if x < n
+    then x : losMenoresA n xs
+    else losMenoresA n xs
 
-elMenor :: Int -> Int -> Int
-elMenor n m = if n > m then n else m
 
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 lasDeLongitudMayorA n [] = []
@@ -84,7 +85,7 @@ factorial 0 = 1
 factorial n = n * factorial (n-1)
 
 cuentaRegresiva :: Int -> [Int]
-cuentaRegresiva 0 = [0]
+cuentaRegresiva 0 = []
 cuentaRegresiva n = n : cuentaRegresiva (n-1)
 
 repetir :: Int -> a -> [a]
@@ -97,10 +98,11 @@ losPrimeros _ [] = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
 
 sinLosPrimeros :: Int -> [a] -> [a]
-sinLosPrimeros _ [] = []
-sinLosPrimeros n (x:xs) = if n<=0
-                          then x : sinLosPrimeros (n-1) xs
-                          else sinLosPrimeros (n-1) xs
+sinLosPrimeros n [] = []
+sinLosPrimeros n (x:xs) =
+  if n > 0
+    then sinLosPrimeros (n - 1) xs
+    else x : xs
 
 
 data Persona = P String Int String
@@ -128,8 +130,7 @@ promedio :: [ Int ] -> Int
 promedio ns = div (sumatoria ns) (longitud ns)
 
 elMasViejo :: [Persona] -> Persona
---PRECOND: La lista al menos tiene una persona
-elMasViejo [] = error "Tiene que haber al menos una persona"
+elMasViejo [p] = p
 elMasViejo (p:ps) = laQueEsMayor p (elMasViejo ps)
 
 laQueEsMayor :: Persona -> Persona -> Persona
@@ -146,7 +147,7 @@ pokemonsDe :: Entrenador -> [Pokemon]
 pokemonsDe (ConsEntrenador n pkms) = pkms 
 
 cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantPokemonDe t e = cantPokemon (entrenadorConPokemonsDeTipo e t)
+cantPokemonDe t e = longitud (pokemonsDeTipo (pokemonsDe e) t)
 
 entrenadorConPokemonsDeTipo :: Entrenador -> TipoDePokemon -> Entrenador
 entrenadorConPokemonsDeTipo e t = ConsEntrenador (nombreEntrenador e) (pokemonsDeTipo (pokemonsDe e) t)
@@ -223,10 +224,11 @@ proyectosDeDiferentesRoles (r:rs) = agregarProyectoSiNoEsta (proyecto r)  (proye
 
 
 agregarProyectoSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
-agregarProyectoSiNoEsta p [] = []
-agregarProyectoSiNoEsta p (pr:prs) = if not ( sonElMismoProyecto p pr)
-                                     then pr : agregarProyectoSiNoEsta p prs
-                                     else agregarProyectoSiNoEsta p prs
+agregarProyectoSiNoEsta p [] = [p]
+agregarProyectoSiNoEsta p (pr:prs) =
+  if sonElMismoProyecto p pr
+    then pr : prs
+    else pr : agregarProyectoSiNoEsta p prs
  
 sonElMismoProyecto :: Proyecto -> Proyecto -> Bool
 sonElMismoProyecto p1 p2 = nombre p1 == nombre p2

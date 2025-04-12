@@ -43,14 +43,15 @@ empiezaConM Miercoles = True
 empiezaConM _ = False
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
-vieneDespues Lunes Martes = True
-vieneDespues Martes  Miercoles = True
-vieneDespues Miercoles Jueves = True
-vieneDespues Jueves Viernes = True
-vieneDespues Viernes Sabado = True
-vieneDespues Sabado Domingo = True
-vieneDespues Domingo Lunes = True
+vieneDespues Martes Lunes = True
+vieneDespues Miercoles Martes = True
+vieneDespues Jueves Miercoles = True
+vieneDespues Viernes Jueves = True
+vieneDespues Sabado Viernes = True
+vieneDespues Domingo Sabado = True
+vieneDespues Lunes Domingo = True
 vieneDespues _ _ = False
+
 
 estaEnElMedio :: DiaDeSemana -> Bool
 estaEnElMedio Lunes = False
@@ -158,14 +159,8 @@ estaVacia [] = True
 estaVacia _  = False
 
 
-elPrimero :: [a] -> a
-elPrimero (x : xs) = x
-
-sinElPrimero :: [a] -> [a]
-sinElPrimero (x : xs) = xs
-
 splitHead :: [a] -> (a, [a])
-splitHead (x : xs) = (elPrimero (x : xs), sinElPrimero (x : xs))
+splitHead (x:xs) = (x, xs)
 
 -- maxDelPar (divisionYResto (sumar (sucesor 8) 1) (sucesor 0))
 -- maxDelPar (divisionYResto (sumar (sucesor 4) (sucesor 4)) (sucesor 0))
