@@ -98,9 +98,17 @@ profundidad :: Mapa -> Int
 profundidad (Fin c) = 1
 profundidad (Bifurcacion c m1 m2) = 1 + max (profundidad m1) (profundidad m2)
 
+
 tesorosPorNivel :: Mapa -> [[Objeto]]
-tesorosPorNivel (Fin c) =
-tesorosPorNivel (Bifurcacion c m1 m2) = 
+tesorosPorNivel (Fin c) = [soloTesoros (objetos c)]
+tesorosPorNivel (Bifurcacion c m1 m2) =
+  [soloTesoros (objetos c)] ++ agruparElementos (tesorosPorNivel m1) (tesorosPorNivel m2)
+
+soloTesoros :: [Objeto] -> [Objeto]
+soloTesoros [] = []
+soloTesoros (o:os) = if esTesoro o
+                     then o : soloTesoros os
+                     else soloTesoros os
 
 agruparElementos :: [[a]] -> [[a]] -> [[a]]
 agruparElementos [] ys = ys
@@ -108,8 +116,15 @@ agruparElementos xs [] = xs
 agruparElementos (x:xs) (y:ys) = (x ++ y) : agruparElementos xs ys
 
 
+todosLosCaminos :: Mapa -> [[Dir]]
+todosLosCaminos (Fin _) = []
+todosLosCaminos (Bifurcacion _ mi md) =
+  ([[]] ++ agregaATodos Izq (todosLosCaminos mi))
+  ++ agregaATodos Der (todosLosCaminos md)
 
-
+agregaATodos :: Dir -> [[Dir]] -> [[Dir]]
+agregaATodos _ [] = []
+agregaATodos d (ds:dss) = (d:ds) : agregaATodos d dss
 
 
 
