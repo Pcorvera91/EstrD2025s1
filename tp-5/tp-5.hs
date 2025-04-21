@@ -1,4 +1,6 @@
 import SetV1
+import Queue
+import Stack
 
 losQuePertenecen :: Eq a => [a] -> Set a -> [a]
 losQuePertenecen [] s = []
