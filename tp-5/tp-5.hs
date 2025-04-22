@@ -38,7 +38,12 @@ queueToList emptyQ = []
 queueToList q = (firstQ q) : (queueToList (dequeue q)) 
 
 unionQ :: Queue a -> Queue a -> Queue a
-unionQ q1 q2  = Q (queueToList q1 ++ queueToList q2)
+unionQ q1 q2 = if isEmptyQ q1
+               then q2
+               else Q (queueToList q1 ++ queueToList q2)
+
+
+
 
 
 
