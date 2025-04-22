@@ -13,8 +13,12 @@ lenS :: Stack a -> Int
 
 emptyS = St [] 0
 
-isEmptyS (St [] _) = True
-isEmptyS (St _ _) = False
+isEmptyS (St xs n) = if null xs
+                     then True
+                     else False
+
+isEmptySM (St [] _) = True
+isEmptySM (St _ _) = False
 
 push x (St xs n) = (St (x : xs) (n+1))
 
