@@ -1,5 +1,5 @@
 module Queue2List
-    (Queue2List , emptyQ , isEmptyQ , enqueue , firstQ ,dequeue)
+    (Queue , emptyQ , isEmptyQ , enqueue , firstQ ,dequeue)
     where
 
 data Queue a = Q [a] [a]
@@ -13,18 +13,15 @@ dequeue :: Queue a -> Queue a
 --hay al menos 1 elemento en la cola
 
 
-emptyQ = Q []
+emptyQ = Q [] []
 
-isEmptyQ (Q []) = True
-isEmptyQ (Q _) = False
+isEmptyQ (Q [] []) = True
+isEmptyQ (Q _ _) = False
 
-enqueue x (Q xs) = Q (agregarAlFinal xs x)
+enqueue x (Q fs bs) = Q fs (x:bs)
 
-agregarAlFinal :: [a] -> a -> [a]
-agregarAlFinal [] x = [x]
-agregarAlFinal (y:ys) x = y : agregarAlFinal ys x
 
-dequeue (Q xs) = Q (sinLosPrimeros 1 xs)
+dequeue (Q fs bs) = Q (sinLosPrimeros 1 fs) bs
 
 sinLosPrimeros :: Int -> [a] -> [a]
 sinLosPrimeros n [] = []
@@ -33,4 +30,4 @@ sinLosPrimeros n (x:xs) =
     then sinLosPrimeros (n - 1) xs
     else x : xs
 
-firstQ (Q (x:xs)) = x
+firstQ (Q xs (y:ys)) = y
