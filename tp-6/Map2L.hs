@@ -27,7 +27,19 @@ domM    :: Ord k => Map k v -> [k]
 
 emptyM               = M [] []                  
 assocM k v (M ks vs) = M (k : ks) (v : vs)
-lookupM k  (M ks vs) = 
-deleteM k  (M ks vs) =      
-domM       (M ks vs) =           
+lookupM k  (M ks vs) = buscar k ks vs
+deleteM k  (M ks vs) = elimineishon k ks vs     
+domM       (M ks vs) = ks         
+
+buscar :: Eq k => k -> [k] -> [v] -> Maybe v
+buscar _ [] [] = Nothing
+buscar k (kp:ks) (v:vs) = if k == kp
+                             then Just v
+                             else buscar k ks vs
+
+elimineishon :: Eq k => k -> ks -> vs -> Map k v
+elimineishon _ [] [] = emptyM
+elimineishon k (kp:ks) (v:vs) = if k == kp
+                                then elimineishon k ks vs
+                                else assocM kp v (elimineishon k ks vs)
 
