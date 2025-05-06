@@ -55,11 +55,14 @@ valorEn m k = case lookupM k m of
                 Nothing -> 0
                 Just n  -> n
 
-ms2list (MS m) = multisetALista (domM m) m 
+ms2list (MS m) = mapALista (domM m) m 
 
-multisetALista :: Ord a => [a] -> Map a Int -> [(a,Int)]
-multisetALista [] m = 
-multisetALista 
+mapALista :: Ord a => [a] -> Map a Int -> [(a,Int)]
+mapALista [] m = []
+mapALista (x:xs) m = case lookupM x m of
+                     Just n  -> (x, n) : mapALista xs m
+                     Nothing -> mapALista xs m
+
 
 
 
