@@ -1,3 +1,0 @@
-construir :: [SectorId] -> Nave
-construir [] =
-construir (s:ss) = N ()
