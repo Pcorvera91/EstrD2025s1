@@ -139,7 +139,15 @@ reconstruirTripulantes n id (t1:ts) t = insertH t1 (reconstruirTripulantes n id 
 -- USUARIO
 
 sectores :: Nave -> Set SectorId
-sectores n = 
+sectores n = sectoresConTrip (nombreDeTripulantes (tripulantesN n)) n 
+
+nombreDeTripulantes :: [Tripulantes] -> [Nombre]
+nombreDeTripulantes [] = []
+nombreDeTripulantes (t:ts) = nombre t : nombreDeTripulantes ts
+
+sectoresConTrip :: [Nombre] -> Nave -> Set SectorId
+sectoresConTrip [] nave = emptyS 
+sectoresConTrip (n:ns) nave = unionS (sectoresAsignados n nave) (sectoresConTrip ns nave)
 
 
 
