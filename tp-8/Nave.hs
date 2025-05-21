@@ -149,6 +149,24 @@ sectoresConTrip :: [Nombre] -> Nave -> Set SectorId
 sectoresConTrip [] nave = emptyS 
 sectoresConTrip (n:ns) nave = unionS (sectoresAsignados n nave) (sectoresConTrip ns nave)
 
+data Componente = LanzaTorpedos | Motor Int | Almacen [Barril]
+data Barril = Comida | Oxigeno | Torpedo | Combustible
+
+
+sinSectoresAsignados :: Nave ->[Tripulante]
+
+barriles :: Nave -> [Barril]
+barriles n = almacenes(todosLosComponentes n)
+
+almacenes :: [Componente] -> [Barril]
+almacenes [] = []
+almacenes (c:cs) = if esAlmacen c 
+                   then barril c ++ almacenes cs 
+                   else almacenes cs 
+
+todosLosComponentes :: Nave -> [Componente]
+todosLosComponentes n = 
+
 
 
 {-
