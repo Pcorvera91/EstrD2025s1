@@ -178,5 +178,9 @@ poderDePropulsion :: Nave -> Int
 poderDePropulsion (N ts) = poderT ts 
 
 poderT :: Tree Sector -> Int 
-poderT EmptyT = 
-poderT (NodeT s t1 t2) = 
+poderT EmptyT = 0
+poderT (NodeT s t1 t2) = totalDePotencia (componentes s) + poderT t1 + poderT t2 
+
+totalDePotencia :: [Componente] -> Int 
+totalDePotencia [] = 0
+totalDePotencia (c:cs) = 
