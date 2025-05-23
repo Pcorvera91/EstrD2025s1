@@ -183,4 +183,49 @@ poderT (NodeT s t1 t2) = totalDePotencia (componentes s) + poderT t1 + poderT t2
 
 totalDePotencia :: [Componente] -> Int 
 totalDePotencia [] = 0
-totalDePotencia (c:cs) = 
+totalDePotencia (c:cs) = if esMotor c 
+                         then potenciaDe c + totalDePotencia cs 
+                         else totalDePotencia cs 
+
+esMotor :: Componente -> Bool 
+esMotor c = case c of 
+    Motor _ -> True 
+    _       -> False
+
+potenciaDe :: Componente -> Int 
+potenciaDe c = case c of 
+    Motor n -> n 
+    _       -> 0 
+
+barriles :: Nave -> [Barril]
+barriles (N ts) = barrilesT ts 
+
+barrilesT :: Tree Sector -> [Barril]
+barrilesT EmptyT = []
+barrilesT (NodeT s t1 t2) = totalDeBarriles(componentes s) ++ barrilesT t1 ++ barrilesT t2
+
+totalDeBarriles :: [Componente] -> [Barril]
+totalDeBarriles [] = []
+totalDeBarriles (c:cs) = if esAlmacen c 
+                         then barrilesDe c ++ totalDeBarriles cs 
+                         else totalDeBarriles cs 
+
+esAlmacen :: Componente -> Bool 
+esAlmacen c = case c of
+    Almacen _ -> True 
+    _         -> False
+
+barrilesDe :: Componente -> [Barril]
+barrilesDe c = case c of 
+    Almacen bs -> bs 
+    _          -> []
+
+componentes :: Sector -> [Componente]
+componentes (S _ cs _) = cs
+
+agregarASector :: [Componente] -> SectorId -> Nave -> Nave
+agregarASector cs sid (N ts) = (N agregarASectorT cs sid ts)
+
+agregarASectorT :: [Componente] -> SectorId -> Tree Sector -> Tree Sector 
+agregarASectorT cs sid EmptyT = 
+agregarASectorT cs sid (NodeT s ti td) = s agregarASectorT cs sid ti agregarASectorT cs sid td 
