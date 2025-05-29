@@ -267,5 +267,11 @@ valoresALista (n:ns) m = case lookupM m n of
                             Just x  -> x : valoresALista ns m 
 
 remove :: Ord a => RAList a -> RAList a
-remove (MkR n ma ha) = MkR (n-1) ()
+remove (MkR n ma ha) = MkR (n-1) (deleteM n ma) (eliminarDelHeap ma n ha)
 
+--verifico elemento en el map,y luego con ese valor lo busco en la Heap y lo elimino
+
+
+
+eliminarDelHeap :: Ord a => Map Int a -> Int -> Heap a -> Heap a 
+eliminarDelHeap ma n ha = 
