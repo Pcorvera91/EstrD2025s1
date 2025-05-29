@@ -274,4 +274,5 @@ remove (MkR n ma ha) = MkR (n-1) (deleteM n ma) (eliminarDelHeap ma n ha)
 
 
 eliminarDelHeap :: Ord a => Map Int a -> Int -> Heap a -> Heap a 
-eliminarDelHeap ma n ha = 
+eliminarDelHeap ma n ha = case lookupM m n of
+
