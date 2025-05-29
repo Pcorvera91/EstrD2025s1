@@ -229,3 +229,35 @@ agregarASector cs sid (N ts) = (N agregarASectorT cs sid ts)
 agregarASectorT :: [Componente] -> SectorId -> Tree Sector -> Tree Sector 
 agregarASectorT cs sid EmptyT = 
 agregarASectorT cs sid (NodeT s ti td) = s agregarASectorT cs sid ti agregarASectorT cs sid td 
+
+data RAList a = MkR Int (Map Int a) (Heap a)
+
+{-INV.REP:
+Sea MkR n ma ha
+*los valores que aparecen en ma también aparecen en ha
+*la cantidad de pares k v de ma y de ha es igual a la posición máxima a ocupar - 1
+*la cantidad de pares clave-valor de ma == cantidad de datos de ha.
+* N == H == K
+
+-}
+emptyRAL :: RAList a
+emptyRAL = MkR 0 emptyM emptyH
+
+isEmptyRAL :: RAList a -> Bool
+isEmptyRAL (MkR _ _ ha) = isEmptyH ha
+
+lengthRAL :: RAList a -> Int
+lengthRAL (MkR n _ _) = n-1
+
+get :: Int -> RAList a -> a
+get i (MkR _ ma _ ha) = lookupM ma i 
+
+minRAL :: Ord a => RAList a -> a
+minRAL (MkR _ _ ha) = findMin ha
+
+add :: Ord a => a -> RAList a -> RAList a
+add x (MkR n ma ha) = MkR (n+1) (assocM n x ma) (insertH  x ha)
+
+elems :: Ord a => RAList a -> [a]
+elems (MkR 
+
