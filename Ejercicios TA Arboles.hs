@@ -235,8 +235,7 @@ data RAList a = MkR Int (Map Int a) (Heap a)
 {-INV.REP:
 Sea MkR n ma ha
 *los valores que aparecen en ma también aparecen en ha
-*la cantidad de pares k v de ma y de ha es igual a la posición máxima a ocupar - 1
-*la cantidad de pares clave-valor de ma == cantidad de datos de ha.
+*la cantidad de pares k v de ma == datos de ha y es igual a n - 1
 * N == H == K
 
 -}
@@ -250,7 +249,7 @@ lengthRAL :: RAList a -> Int
 lengthRAL (MkR n _ _) = n-1
 
 get :: Int -> RAList a -> a
-get i (MkR _ ma _ ha) = lookupM ma i 
+get i (MkR _ ma _ ha) = fromJust(lookupM ma i) 
 
 minRAL :: Ord a => RAList a -> a
 minRAL (MkR _ _ ha) = findMin ha
@@ -259,5 +258,14 @@ add :: Ord a => a -> RAList a -> RAList a
 add x (MkR n ma ha) = MkR (n+1) (assocM n x ma) (insertH  x ha)
 
 elems :: Ord a => RAList a -> [a]
-elems (MkR 
+elems (MkR _ ma _) = valoresALista (domM ma ) ma 
+
+valoresALista :: Ord a => [Int] -> Map Int a -> [a]
+valoresALista [] m = [] 
+valoresALista (n:ns) m = case lookupM m n of 
+                            Nothing -> valoresALista ns m 
+                            Just x  -> x : valoresALista ns m 
+
+remove :: Ord a => RAList a -> RAList a
+remove (MkR n ma ha) = MkR (n-1) ()
 
