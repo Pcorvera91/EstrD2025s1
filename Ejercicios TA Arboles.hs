@@ -266,13 +266,50 @@ valoresALista (n:ns) m = case lookupM m n of
                             Nothing -> valoresALista ns m 
                             Just x  -> x : valoresALista ns m 
 
+
+
 remove :: Ord a => RAList a -> RAList a
-remove (MkR n ma ha) = MkR (n-1) (deleteM n ma) (eliminarDelHeap ma n ha)
+-- Precondición: la lista no está vacía.
+remove (MkR n ma ha) = case lookupM n ma of
+                           Nothing -> error "La lista no debe estar vacía"
+                           Just v  -> MkR (n-1) (deleteM n ma) (eliminarDelHeap v ha)
 
 --verifico elemento en el map,y luego con ese valor lo busco en la Heap y lo elimino
 
 
+eliminarDelHeap :: Ord a => Int -> Heap a -> Heap a 
+eliminarDelHeap n h = if n == (findMinH h)
+                          then deleteMinH h
+                          else insertH (findMinH h) (eliminarDelHeap n (deleteMinH h))
 
-eliminarDelHeap :: Ord a => Map Int a -> Int -> Heap a -> Heap a 
-eliminarDelHeap ma n ha = case lookupM m n of
+-- Si el elemento buscado era el mínimo (el primero de la h) lo elimino y ya.
+-- Sino caso recursivo. Cómo? Saco el mínimo y lo inserto en la heap que tiene el elemento buscado eliminado y sin el elemento mínimo ya visto.
 
+set :: Ord a => Int -> a -> RAList a -> RAList a
+-- Propósito: reemplaza el elemento en la posición dada.
+-- Precondición: el índice debe existir.
+set pos x (MkR n ma ha) = case lookupM pos ma of 
+                            Nothing -> error "La posicion no existe"
+                            Just v  -> MkR n (reemplazarM pos x ma) (reemplazarEnHeap x ha)
+
+reemplazarM :: Int -> a -> Map Int a -> Map Int a 
+reemplazarM i x m =  assocM i x (deleteM i m)
+
+reemplazarEnHeap :: Ord a => a -> a -> Heap a -> Heap a
+reemplazarEnHeap viejo nuevo h = insertH nuevo (quitarElemento viejo h)
+
+quitarElemento :: Ord a => a -> Heap a -> Heap a
+quitarElemento x h = if isEmptyH h
+                        then emptyH
+                        else if x == findMin h
+                                then deleteMin h
+                                else insertH (findMin h) (quitarElemento x (deleteMin h))
+
+addAt :: Ord a => Int -> a -> RAList a -> RAList a
+-- Propósito: agrega un elemento en la posición dada.
+-- Precondición: el índice debe estar entre 0 y la longitud de la lista.
+-- Observación: cada elemento en una posición posterior a la dada pasa a estar en su posición siguiente.
+-- Eficiencia: O(N log N).
+-- Sugerencia: definir una subtarea que corra los elementos del Map en una posición a partir de una posición dada. Pasar también como argumento la máxima posición posible.
+
+addAt i x (MkR n ma ha) = MkR (n+1) (dezplazarM (domM ma) (assocM i x ma)) (insertH x ha)
